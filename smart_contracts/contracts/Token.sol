@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >= 0.8.0 < 0.9.0;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-
 contract Token {
-  using SafeMath for uint;
 
   // Variables
   string public name = "DApp Token";
@@ -18,7 +15,7 @@ contract Token {
   event Transfer(address indexed from, address indexed to, uint256 value);
   event Approval(address indexed owner, address indexed spender, uint256 value);
 
-  constructor() public {
+  constructor() {
     totalSupply = 1000000 * (10 ** decimals);
     balanceOf[msg.sender] = totalSupply;
   }
@@ -31,8 +28,8 @@ contract Token {
 
   function _transfer(address _from, address _to, uint256 _value) internal {
     require(_to != address(0));
-    balanceOf[_from] = balanceOf[_from].sub(_value);
-    balanceOf[_to] = balanceOf[_to].add(_value);
+    balanceOf[_from] = balanceOf[_from] - _value;
+    balanceOf[_to] = balanceOf[_to] + _value;
     emit Transfer(_from, _to, _value);
   }
 
@@ -46,7 +43,7 @@ contract Token {
   function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
     require(_value <= balanceOf[_from]);
     require(_value <= allowance[_from][msg.sender]);
-    allowance[_from][msg.sender] = allowance[_from][msg.sender].sub(_value);
+    allowance[_from][msg.sender] = allowance[_from][msg.sender] - _value;
     _transfer(_from, _to, _value);
     return true;
   }
