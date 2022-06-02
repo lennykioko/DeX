@@ -9,7 +9,6 @@ const wait = (sec) => {
 }
 
 async function main() {
-
   const [account1, account2, account3] = await ethers.getSigners()
 
   // We get the contract to deploy
@@ -23,16 +22,18 @@ async function main() {
   const Exchange = await hre.ethers.getContractFactory('Exchange')
   const exchange = await Exchange.deploy(account3.address, 10)
   await exchange.deployed()
-  console.log('Exchange deployed', token.address);
+  console.log('Exchange deployed', token.address)
 
   await token.transfer(account2.address, tokens(100))
-  console.log(`token transffered from ${account1.address} to ${account2.address}`)
+  console.log(
+    `token transffered from ${account1.address} to ${account2.address}`
+  )
 
   await exchange.depositEther({ value: ether(30) })
 
   console.log(
     `Ether deposited to exchnage from ${account1.address} to ${exchange.address}`
-  );
+  )
 
   await token.connect(account2).approve(exchange.address, tokens(50))
   console.log(`Token approved from ${account2.address} to ${exchange.address}`)
@@ -49,7 +50,6 @@ async function main() {
     ether(0.015)
   )
   console.log(`order made by ${account1.address}`)
-  // console.log(Orderid)
 
   let num = await result.wait()
 
@@ -61,7 +61,7 @@ async function main() {
   console.log(`order cancelled by ${account1.address}`)
   await wait(2)
 
-  // // filling order 1
+  // filling order 1
   result = await exchange.makeOrder(
     token.address,
     tokens(2),
@@ -79,7 +79,7 @@ async function main() {
   console.log(`order filled by  ${account2.address}`)
   await wait(2)
 
-  // // filling order 2
+  // filling order 2
   result = await exchange.makeOrder(
     token.address,
     tokens(1.9),
@@ -97,7 +97,7 @@ async function main() {
 
   await wait(2)
 
-  // // filling order 3
+  // filling order 3
   result = await exchange.makeOrder(
     token.address,
     tokens(1),
