@@ -38,18 +38,14 @@ describe('Exchange', async () => {
   })
 
   describe('fallback', () => {
+    let amount = ether(1)
     it('reverts when ether is sent', async () => {
       await expect(
-        exchange.connect(user1).sendTransaction({
-          value: 1,
+        user1.sendTransaction({
+          to: exchange.address,
+          value: amount,
         })
       ).to.be.reverted
-      // await expect(
-      //   exchange.sendTransaction({
-      //     from: user1,
-      //     value: 1,
-      //   })
-      // ).to.be.revertedWith(EVM_REVERT)
     })
   })
 
