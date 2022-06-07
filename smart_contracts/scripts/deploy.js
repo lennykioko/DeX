@@ -19,7 +19,7 @@ async function main() {
   // We get the contract to deploy
   const Exchange = await hre.ethers.getContractFactory('Exchange')
   const exchange = await Exchange.deploy(
-    '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
+    // '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC', // add an fee address
     10
   )
   await exchange.deployed()
