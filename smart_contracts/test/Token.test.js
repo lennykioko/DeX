@@ -3,21 +3,23 @@ const { ethers } = require('hardhat')
 const { tokens } = require('./helper')
 
 describe('Test the Token', async () => {
+  let token
+  let deployer
+  let receiver
+  let exchange
+  const totalSupply = tokens(1000000)
+
+  beforeEach(async () => {
+    const Token = await ethers.getContractFactory('Token')
+    const [owner, addr1, addr2] = await ethers.getSigners()
+    deployer = owner
+    receiver = addr1
+    exchange = addr2
+    token = await Token.deploy()
+    await token.deployed()
+  })
+
   describe('deployment', async () => {
-    let token
-    let deployer
-    let receiver
-    const totalSupply = tokens(1000000)
-
-    beforeEach(async () => {
-      const Token = await ethers.getContractFactory('Token')
-      const [owner, addr1] = await ethers.getSigners()
-      deployer = owner
-      receiver = addr1
-      token = await Token.deploy()
-      await token.deployed()
-    })
-
     it('tracks successful deployment', async () => {
       console.log(`contract address: ${token.address}`)
       expect(token).to.not.equal(null)
@@ -48,19 +50,10 @@ describe('Test the Token', async () => {
   })
 
   describe('sending tokens success', () => {
-    let token
-    let deployer
-    let receiver
     let amount
     let result
 
     beforeEach(async () => {
-      const Token = await ethers.getContractFactory('Token')
-      const [owner, addr1] = await ethers.getSigners()
-      deployer = owner
-      receiver = addr1
-      token = await Token.deploy()
-      await token.deployed()
       amount = tokens(100)
       result = await token.transfer(receiver.address, amount)
     })
@@ -86,12 +79,6 @@ describe('Test the Token', async () => {
 
   describe('sending tokens failure', () => {
     it('reject insufficient balances', async () => {
-      const Token = await ethers.getContractFactory('Token')
-      const [owner, addr1] = await ethers.getSigners()
-      const deployer = owner
-      const receiver = addr1
-      token = await Token.deploy()
-      await token.deployed()
       const invalidAmount = tokens(100000000)
       await expect(token.transfer(receiver.address, invalidAmount)).to.be
         .reverted
@@ -105,28 +92,15 @@ describe('Test the Token', async () => {
     })
 
     it('rejects invalid recipients', async () => {
-      const Token = await ethers.getContractFactory('Token')
-      token = await Token.deploy()
-      await token.deployed()
       await expect(token.transfer(0x0, tokens(100))).to.be.reverted
     })
   })
 
   describe('approving tokens success', () => {
-    let deployer
-    let receiver
-    let exchange
     let result
     let amount
 
     beforeEach(async () => {
-      const Token = await ethers.getContractFactory('Token')
-      const [owner, addr1, addr2] = await ethers.getSigners()
-      deployer = owner
-      receiver = addr1
-      exchange = addr2
-      token = await Token.deploy()
-      await token.deployed()
       amount = tokens(100)
       result = await token.approve(exchange.address, amount)
     })
@@ -152,20 +126,10 @@ describe('Test the Token', async () => {
   // -------------------------------------------------------------------------
 
   describe('delegated token transfers success', () => {
-    let deployer
-    let receiver
-    let exchange
     let result
     let amount
 
     beforeEach(async () => {
-      const Token = await ethers.getContractFactory('Token')
-      const [owner, addr1, addr2] = await ethers.getSigners()
-      deployer = owner
-      receiver = addr1
-      exchange = addr2
-      token = await Token.deploy()
-      await token.deployed()
       amount = tokens(100)
       result = await token.approve(exchange.address, amount)
       result = await token
@@ -202,13 +166,6 @@ describe('Test the Token', async () => {
 
   describe('delegated token transfers failure', () => {
     it('reject insufficient balances', async () => {
-      const Token = await ethers.getContractFactory('Token')
-      const [owner, addr1, addr2] = await ethers.getSigners()
-      const deployer = owner
-      const receiver = addr1
-      const exchange = addr2
-      token = await Token.deploy()
-      await token.deployed()
       const invalidAmount = tokens(100000000)
       await expect(
         token
@@ -218,12 +175,6 @@ describe('Test the Token', async () => {
     })
 
     it('rejects invalid recipients', async () => {
-      const Token = await ethers.getContractFactory('Token')
-      const [owner, _, addr2] = await ethers.getSigners()
-      const deployer = owner
-      const exchange = addr2
-      token = await Token.deploy()
-      await token.deployed()
       await expect(
         token.connect(exchange).transferFrom(deployer.address, 0x0, tokens(100))
       ).to.be.reverted
