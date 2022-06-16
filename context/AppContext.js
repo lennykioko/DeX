@@ -60,19 +60,50 @@ export function AppContextProvider({ children }) {
     }
   }
 
+//   const eventFilterv5 = (contractAddress, erc20abi, _provider) => {
+//     const iface = new ethers.utils.Interface(erc20abi.abi);
+//     const logs = await _provider.getLogs({
+//         address: contractAddress
+//     });
+//     const decodedEvents = logs.map(log => {
+//         iface.decodeEventLog("Transfer", log.data)
+//     });
+//     const toAddresses = decodedEvents.map(event => event["values"]["to"]);
+//     const fromAddresses = decodedEvents.map(event => event["values"]["from"]);
+//     const amounts = decodedEvents.map(event => event["values"]["value"]);
+//     return [fromAddresses, toAddresses, amounts]
+// }
+
   // exchange functions
   const loadAllOrders = async (exchange) => {
     // Fetch cancelled orders with the "Cancel" event stream
-    
-    const events = exchange.filters.Deposit();
-    const cancelStream = await exchange.queryFilter(events)
+    const iface = new ethers.utils.Interface(ExchangeAbi.abi);
 
-    console.log(cancelStream)
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const logs = await provider.getLogs({
+      address: exchangeAddr,
+      fromBlock: "latest",
+    toBlock: 'latest'
+  });
+
+  const decodedEvents = logs.map(log => {
+    iface.decodeEventLog("Trade", log.data)
+});
+
+    console.log(decodedEvents)
+
+// provider.getCode(exchangeAddr).then((code) => {
+//   console.log("Code:", code);
+// });
   }
 
-  const cancelOrder = async () => {}
+  const cancelOrder = async () => {
 
-  const fillOrder = async () => {}
+  }
+
+  const fillOrder = async () => {
+    
+  }
 
   const subscribeToEvents = async () => {}
 
