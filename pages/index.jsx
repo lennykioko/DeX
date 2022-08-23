@@ -6,10 +6,31 @@ import NewOrder from '../components/NewOrder'
 import OrderBook from '../components/OrderBook'
 import Trades from '../components/Trades'
 import Transactions from '../components/Transactions'
+import { useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
 
 const Home = () => {
-  const { isLoading, setIsLoading } = useAppContext()
+  const {
+    isLoading,
+    setIsLoading,
+    checkIfWalletIsConnected,
+    connectedAddress,
+    loadAllOrders,
+    exchangeAddr,
+    tokenAddr,
+    ExchangeAbi,
+    TokenAbi,
+    getContract,
+  } = useAppContext()
+
+  useEffect(() => {
+    checkIfWalletIsConnected()
+    const exchange = getContract(exchangeAddr,ExchangeAbi.abi)
+    
+    // console.log(exchange.filters.Cancel())
+    // const exchange = getContract(TokenAbi, tokenAddr)
+    loadAllOrders(exchange)
+  }, [exchangeAddr, tokenAddr, ExchangeAbi, TokenAbi])
 
   return (
     <div className="min-w-screen min-h-screen bg-slate-800 text-white">
