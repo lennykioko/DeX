@@ -8,6 +8,7 @@ export function useAppContext() {
 
 export function AppContextProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false)
+  // const [,] = useState()
 
   const context = {
     isLoading,

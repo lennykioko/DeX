@@ -8,8 +8,18 @@ const ether = (num) => {
 
 const tokens = (num) => ether(num)
 
+export const formatBalance = (balance) => {
+  const precision = 100 // 2 dp
+
+  balance = ether(balance)
+  balance = Math.round(balance * precision) / precision // Use 2 dp
+
+  return balance
+}
+
 module.exports = {
   ETHER_ADDRESS,
   ether,
   tokens,
+  formatBalance,
 }
