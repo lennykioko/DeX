@@ -21,17 +21,21 @@ const Home = () => {
     ExchangeAbi,
     TokenAbi,
     getContract,
+    cancelledOrders,
+    filledOrders,
+    allOrders,
   } = useAppContext()
 
   useEffect(() => {
-    checkIfWalletIsConnected()
-    const exchange = getContract(exchangeAddr,ExchangeAbi.abi)
-    
-    // console.log(exchange.filters.Cancel())
-    // const exchange = getContract(TokenAbi, tokenAddr)
-    loadAllOrders(exchange)
-  }, [exchangeAddr, tokenAddr, ExchangeAbi, TokenAbi])
+      checkIfWalletIsConnected()
+      setIsLoading(true)
+      const exchange = getContract(exchangeAddr, ExchangeAbi.abi)
+      const token = getContract(tokenAddr, TokenAbi.abi)
 
+      setIsLoading(!exchange && !token)
+      loadAllOrders(exchange)
+  }, [exchangeAddr, tokenAddr, ExchangeAbi, TokenAbi])
+  
   return (
     <div className="min-w-screen min-h-screen bg-slate-800 text-white">
       <Head>
@@ -39,12 +43,12 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
+      <Header address={connectedAddress}/>
       <div className="w-full flex-col md:grid md:grid-cols-4 md:grid-rows-2">
         <Balance />
         <OrderBook />
         <PriceChart />
-        <Trades />
+        <Trades filledOrders={filledOrders}/>
         <NewOrder />
         <Transactions />
       </div>

@@ -1,4 +1,6 @@
-function Trades() {
+function Trades({
+  filledOrders
+}) {
   return (
     <div className="row-span-6 border-2 border-black">
       <div className="border-b-2 border-gray-900 p-4 text-xl">Trades</div>
@@ -18,38 +20,22 @@ function Trades() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal text-gray-300"
-              >
-                3:11:04 pm 4/12
-              </th>
-              <td className="border border-slate-700 py-1">200</td>
-              <td className="border border-slate-700 py-1">0.000075</td>
-            </tr>
 
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal text-gray-300"
-              >
-                3:11:04 pm 4/12
-              </th>
-              <td className="border border-slate-700 py-1">200</td>
-              <td className="border border-slate-700 py-1">0.000075</td>
-            </tr>
+            {filledOrders.map((order) => {
+              return (
+                <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
+                  <th
+                    scope="row"
+                    className="border border-slate-700 py-1 font-normal text-gray-400"
+                  >
+                    {order.formattedTimestamp}
+                  </th>
+                  <td className="border border-slate-700 py-1">{order.tokenAmount}</td>
+                  <td className={`border border-slate-700 py-1 text-${order.tokenPriceClass}-500`}>{order.tokenPrice}</td>
+                </tr>
+              )
+            })}
 
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal text-gray-300"
-              >
-                3:11:04 pm 4/12
-              </th>
-              <td className="border border-slate-700 py-1">200</td>
-              <td className="border border-slate-700 py-1">0.000075</td>
-            </tr>
           </tbody>
         </table>
       </div>

@@ -22,7 +22,7 @@ async function main() {
   const Exchange = await hre.ethers.getContractFactory('Exchange')
   const exchange = await Exchange.deploy(account3.address, 10)
   await exchange.deployed()
-  console.log('Exchange deployed', token.address)
+  console.log('Exchange deployed', exchange.address)
 
   await token.transfer(account2.address, tokens(100))
   console.log(
