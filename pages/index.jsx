@@ -24,6 +24,7 @@ const Home = () => {
     cancelledOrders,
     filledOrders,
     allOrders,
+    orderBook
   } = useAppContext()
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const Home = () => {
       <Header address={connectedAddress}/>
       <div className="w-full flex-col md:grid md:grid-cols-4 md:grid-rows-2">
         <Balance />
-        <OrderBook />
+        <OrderBook orderBook={orderBook}/>
         <PriceChart />
         <Trades filledOrders={filledOrders}/>
         <NewOrder />

@@ -1,4 +1,4 @@
-function OrderBook() {
+function OrderBook({ orderBook }) {
   return (
     <div className="row-span-6 border-2 border-black">
       <div className="border-b-2 border-gray-900 p-4 text-xl">OrderBook</div>
@@ -18,49 +18,24 @@ function OrderBook() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal"
-              >
-                10
-              </th>
-              <td className="border border-slate-700 py-1">0.001</td>
-              <td className="border border-slate-700 py-1">0.01</td>
-            </tr>
-
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal"
-              >
-                10
-              </th>
-              <td className="border border-slate-700 py-1">0.001</td>
-              <td className="border border-slate-700 py-1">0.01</td>
-            </tr>
-
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal"
-              >
-                10
-              </th>
-              <td className="border border-slate-700 py-1">0.001</td>
-              <td className="border border-slate-700 py-1">0.01</td>
-            </tr>
-
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal"
-              >
-                10
-              </th>
-              <td className="border border-slate-700 py-1">0.001</td>
-              <td className="border border-slate-700 py-1">0.01</td>
-            </tr>
+            {orderBook.sellOrders.map((order) => {
+              return (
+                <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
+                  <th
+                    scope="row"
+                    className="border border-slate-700 py-1 font-normal"
+                  >
+                    {order.tokenAmount}
+                  </th>
+                  <td className="border border-slate-700 py-1 text-red-500">
+                    {order.tokenPrice}
+                  </td>
+                  <td className="border border-slate-700 py-1">
+                    {order.etherAmount}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
 
@@ -79,49 +54,24 @@ function OrderBook() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal"
-              >
-                10
-              </th>
-              <td className="border border-slate-700 py-1">0.001</td>
-              <td className="border border-slate-700 py-1">0.01</td>
-            </tr>
-
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal"
-              >
-                10
-              </th>
-              <td className="border border-slate-700 py-1">0.001</td>
-              <td className="border border-slate-700 py-1">0.01</td>
-            </tr>
-
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal"
-              >
-                10
-              </th>
-              <td className="border border-slate-700 py-1">0.001</td>
-              <td className="border border-slate-700 py-1">0.01</td>
-            </tr>
-
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal"
-              >
-                10
-              </th>
-              <td className="border border-slate-700 py-1">0.001</td>
-              <td className="border border-slate-700 py-1">0.01</td>
-            </tr>
+            {orderBook.buyOrders.map((order) => {
+              return (
+                <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
+                  <th
+                    scope="row"
+                    className="border border-slate-700 py-1 font-normal"
+                  >
+                    {order.tokenAmount}
+                  </th>
+                  <td className="border border-slate-700 py-1 text-green-500">
+                    {order.tokenPrice}
+                  </td>
+                  <td className="border border-slate-700 py-1">
+                    {order.etherAmount}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

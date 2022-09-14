@@ -1,4 +1,5 @@
 import React, { useState, useContext, createContext } from 'react'
+import { get, groupBy, reject, maxBy, minBy } from 'lodash'
 import moment from 'moment'
 import ExchangeAbi from '../lib/Exchange.json'
 import TokenAbi from '../lib/Token.json'
@@ -18,7 +19,7 @@ export function AppContextProvider({ children }) {
   const [cancelledOrders, setCancelledOrders] = useState([])
   const [filledOrders, setFilledOrders] = useState([])
   const [allOrders, setAllOrders] = useState([])
-  const [,] = useState()
+  const [orderBook, setOrderBook] = useState({})
   const [,] = useState()
 
   const exchangeAddr = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
@@ -89,8 +90,6 @@ export function AppContextProvider({ children }) {
     let tokenPrice = etherAmount / tokenAmount
     tokenPrice = Math.round(tokenPrice * precision) / precision
 
-    console.log('order.timestamp', order.timestamp.toNumber())
-
     return {
       ...order,
       etherAmount: ether(etherAmount),
@@ -125,6 +124,34 @@ export function AppContextProvider({ children }) {
       return GREEN // success
     } else {
       return RED // danger
+    }
+  }
+
+  const openOrders = (all, filled, cancelled) => {
+    const openOrders = reject(all, (order) => {
+      const orderFilled = filled.some((ord) => ord.id === order.id)
+      const orderCancelled = cancelled.some((ord) => ord.id === order.id)
+      return orderFilled || orderCancelled
+    })
+
+    return openOrders
+  }
+
+  const decorateOrderBookOrders = (orders) => {
+    return orders.map((order) => {
+      order = decorateOrder(order)
+      order = decorateOrderBookOrder(order)
+      return order
+    })
+  }
+
+  const decorateOrderBookOrder = (order) => {
+    const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
+    return {
+      ...order,
+      orderType,
+      orderTypeClass: orderType === 'buy' ? GREEN : RED,
+      orderFillAction: orderType === 'buy' ? 'sell' : 'buy',
     }
   }
 
@@ -163,6 +190,32 @@ export function AppContextProvider({ children }) {
     const allOrdersList = orderStream.map((event) => event.args)
     // Add open orders to the redux store
     setAllOrders(allOrdersList)
+
+    let allOpenOrders = openOrders(
+      allOrdersList,
+      filledOrdersList,
+      cancelledOrdersList
+    )
+    // Decorate orders
+    allOpenOrders = decorateOrderBookOrders(allOpenOrders)
+    // Group orders by "orderType"
+    allOpenOrders = groupBy(allOpenOrders, 'orderType')
+    // Fetch buy orders
+    const buyOrders = get(allOpenOrders, 'buy', [])
+    // Sort buy orders by token price
+    allOpenOrders = {
+      ...allOpenOrders,
+      buyOrders: buyOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
+    }
+    // Fetch sell orders
+    const sellOrders = get(allOpenOrders, 'sell', [])
+    // Sort sell orders by token price
+    allOpenOrders = {
+      ...allOpenOrders,
+      sellOrders: sellOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
+    }
+
+    setOrderBook(allOpenOrders)
   }
 
   const cancelOrder = async () => {}
@@ -199,6 +252,7 @@ export function AppContextProvider({ children }) {
     cancelledOrders,
     filledOrders,
     allOrders,
+    orderBook,
   }
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>
