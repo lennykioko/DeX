@@ -1,4 +1,4 @@
-function Transactions() {
+function Transactions({ myFilledOrders, myOpenOrders }) {
   return (
     <div className="border-2 border-black">
       <div className="border-b-2 border-gray-900 p-4 text-xl">Transactions</div>
@@ -8,6 +8,7 @@ function Transactions() {
         </button>
         <button className="cursor-pointer p-4">Orders</button>
       </div>
+
       <div className="w-full">
         <table className="w-full table-auto border-collapse text-center">
           <thead>
@@ -24,38 +25,61 @@ function Transactions() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal text-gray-300"
-              >
-                3:11:04 pm 4/12
-              </th>
-              <td className="border border-slate-700 py-1">200</td>
-              <td className="border border-slate-700 py-1">0.000075</td>
-            </tr>
+            {myFilledOrders.map((order) => {
+              return (
+                <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
+                  <th
+                    scope="row"
+                    className="border border-slate-700 py-1 font-normal text-gray-300"
+                  >
+                    {order.formattedTimestamp}
+                  </th>
+                  <td className="border border-slate-700 py-1">
+                    {order.orderSign}
+                    {order.tokenAmount}
+                  </td>
+                  <td className="border border-slate-700 py-1">
+                    {order.tokenPrice}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
 
+      <div className="w-full">
+        <table className="w-full table-auto border-collapse text-center">
+          <thead>
             <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal text-gray-300"
-              >
-                3:11:04 pm 4/12
+              <th scope="col" className="border border-slate-700 py-2">
+                Amount
               </th>
-              <td className="border border-slate-700 py-1">200</td>
-              <td className="border border-slate-700 py-1">0.000075</td>
-            </tr>
-
-            <tr>
-              <th
-                scope="row"
-                className="border border-slate-700 py-1 font-normal text-gray-300"
-              >
-                3:11:04 pm 4/12
+              <th scope="col" className="border border-slate-700 py-2">
+                DAPP/ETH
               </th>
-              <td className="border border-slate-700 py-1">200</td>
-              <td className="border border-slate-700 py-1">0.000075</td>
+              <th scope="col" className="border border-slate-700 py-2">
+                Cancel
+              </th>
             </tr>
+          </thead>
+          <tbody>
+            {myOpenOrders.map((order) => {
+              return (
+                <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
+                  <th
+                    scope="row"
+                    className="border border-slate-700 py-1 font-normal text-gray-300"
+                  >
+                    {order.tokenAmount}
+                  </th>
+                  <td className="border border-slate-700 py-1">
+                    {order.tokenPrice}
+                  </td>
+                  <td className="border border-slate-700 py-1">X</td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

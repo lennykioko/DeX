@@ -18,7 +18,7 @@ function OrderBook({ orderBook }) {
             </tr>
           </thead>
           <tbody>
-            {orderBook.sellOrders.map((order) => {
+            {/* {orderBook.sellOrders.map((order) => {
               return (
                 <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
                   <th
@@ -35,7 +35,7 @@ function OrderBook({ orderBook }) {
                   </td>
                 </tr>
               )
-            })}
+            })} */}
           </tbody>
         </table>
 
@@ -54,7 +54,7 @@ function OrderBook({ orderBook }) {
             </tr>
           </thead>
           <tbody>
-            {orderBook.buyOrders.map((order) => {
+            {/* {orderBook.buyOrders.map((order) => {
               return (
                 <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
                   <th
@@ -71,7 +71,7 @@ function OrderBook({ orderBook }) {
                   </td>
                 </tr>
               )
-            })}
+            })} */}
           </tbody>
         </table>
       </div>
