@@ -27,6 +27,7 @@ const Home = () => {
     orderBook,
     myFilledOrders,
     myOpenOrders,
+    priceChart
   } = useAppContext()
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const Home = () => {
       <div className="w-full flex-col md:grid md:grid-cols-4 md:grid-rows-2">
         <Balance />
         <OrderBook orderBook={orderBook} />
-        <PriceChart />
+        <PriceChart priceChart={priceChart}/>
         <Trades filledOrders={filledOrders} />
         <NewOrder />
         <Transactions

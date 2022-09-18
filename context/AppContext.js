@@ -9,6 +9,7 @@ import {
   getAllOpenOrders,
   getMyFilledOrders,
   getMyOpenOrders,
+  getPriceChart,
 } from './utils'
 
 import { ethers } from 'ethers'
@@ -28,6 +29,7 @@ export function AppContextProvider({ children }) {
   const [orderBook, setOrderBook] = useState({})
   const [myFilledOrders, setMyFilledOrders] = useState([])
   const [myOpenOrders, setMyOpenOrders] = useState([])
+  const [priceChart, setPriceChart] = useState({})
 
   const exchangeAddr = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
   const tokenAddr = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
@@ -117,6 +119,10 @@ export function AppContextProvider({ children }) {
     const myOpenOrdersList = getMyOpenOrders(connectedAddress, filledOrdersList)
 
     setMyOpenOrders(myOpenOrdersList)
+
+    const priceChartItems = getPriceChart(filledOrdersList)
+
+    setPriceChart(priceChartItems)
   }
 
   const cancelOrder = async () => {}
@@ -156,6 +162,7 @@ export function AppContextProvider({ children }) {
     orderBook,
     myFilledOrders,
     myOpenOrders,
+    priceChart,
   }
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>

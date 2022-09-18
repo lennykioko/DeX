@@ -16,20 +16,20 @@ function PriceChart({ priceChart, priceChartLoaded }) {
       <div className="border-b-2 border-gray-900 p-4 text-xl">Chart</div>
       <div>
         <div className="p-4 text-lg font-bold">
-          DAPP/ETH &nbsp; {priceSymbol('+')} &nbsp; {`0.00075`}
+          DAPP/ETH &nbsp; {priceSymbol(priceChart.lastPriceChange)} &nbsp; {`${priceChart.lastPrice}`}
         </div>
 
         {/* Pricechart data is required from redux I guess */}
 
-        {/* {typeof window !== 'undefined' && (
+        {typeof window !== 'undefined' && (
           <Chart
             options={chartOptions}
-            series={priceChart.series}
+            series={priceChart.series || []}
             type="candlestick"
             width="100%"
             height="100%"
           />
-        )} */}
+        )}
       </div>
     </div>
   )
