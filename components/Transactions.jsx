@@ -1,4 +1,4 @@
-function Transactions({ myFilledOrders, myOpenOrders }) {
+function Transactions({ myFilledOrders, myOpenOrders, cancelOrder, exchange, account }) {
   return (
     <div className="border-2 border-black">
       <div className="border-b-2 border-gray-900 p-4 text-xl">Transactions</div>
@@ -25,7 +25,7 @@ function Transactions({ myFilledOrders, myOpenOrders }) {
             </tr>
           </thead>
           <tbody>
-            {myFilledOrders.map((order) => {
+            {/* {myFilledOrders.map((order) => {
               return (
                 <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
                   <th
@@ -43,7 +43,7 @@ function Transactions({ myFilledOrders, myOpenOrders }) {
                   </td>
                 </tr>
               )
-            })}
+            })} */}
           </tbody>
         </table>
       </div>
@@ -64,7 +64,7 @@ function Transactions({ myFilledOrders, myOpenOrders }) {
             </tr>
           </thead>
           <tbody>
-            {myOpenOrders.map((order) => {
+            {/* {myOpenOrders.map((order) => {
               return (
                 <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
                   <th
@@ -76,10 +76,12 @@ function Transactions({ myFilledOrders, myOpenOrders }) {
                   <td className="border border-slate-700 py-1">
                     {order.tokenPrice}
                   </td>
-                  <td className="border border-slate-700 py-1">X</td>
+                  <td className="border border-slate-700 py-1" onClick={
+                    () => cancelOrder(exchange, order, account)
+                  }>X</td>
                 </tr>
               )
-            })}
+            })} */}
           </tbody>
         </table>
       </div>

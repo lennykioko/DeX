@@ -23,6 +23,8 @@ export function useAppContext() {
 export function AppContextProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false)
   const [connectedAddress, setConnectedAddress] = useState('')
+  const [exchange, setExchange] = useState()
+  const [token, setToken] = useState()
   const [cancelledOrders, setCancelledOrders] = useState([])
   const [filledOrders, setFilledOrders] = useState([])
   const [allOrders, setAllOrders] = useState([])
@@ -125,11 +127,23 @@ export function AppContextProvider({ children }) {
     setPriceChart(priceChartItems)
   }
 
-  const cancelOrder = async () => {}
+  const cancelOrder = async (exchange, order) => {
+    // This is for the current user who is loggedin on the wallet
+    const result = await exchange.cancelOrder(order.id)
 
-  const fillOrder = async () => {}
+    // Update all exchange orders
+    await loadAllOrders(exchange)
+  }
 
-  const subscribeToEvents = async () => {}
+  const fillOrder = async (exchange, order) => {
+    // This is for the current user who is loggedin on the wallet
+    const result = await exchange.fillOrder(order.id)
+
+    // Update all exchange orders
+    await loadAllOrders(exchange)
+  }
+
+  const subscribeToEvents = async (exchange) => {}
 
   const loadBalances = async () => {}
 
@@ -163,6 +177,10 @@ export function AppContextProvider({ children }) {
     myFilledOrders,
     myOpenOrders,
     priceChart,
+    setExchange,
+    exchange,
+    cancelOrder,
+    fillOrder,
   }
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>

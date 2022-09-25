@@ -1,4 +1,4 @@
-function OrderBook({ orderBook }) {
+function OrderBook({ orderBook, fillOrder, exchange }) {
   return (
     <div className="row-span-6 border-2 border-black">
       <div className="border-b-2 border-gray-900 p-4 text-xl">OrderBook</div>
@@ -20,7 +20,9 @@ function OrderBook({ orderBook }) {
           <tbody>
             {/* {orderBook.sellOrders.map((order) => {
               return (
-                <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
+                <tr key={order.id.toNumber() + order.timestamp.toNumber()} onClick={
+                  () => fillOrder(exchange, order)
+                }>
                   <th
                     scope="row"
                     className="border border-slate-700 py-1 font-normal"
@@ -56,7 +58,9 @@ function OrderBook({ orderBook }) {
           <tbody>
             {/* {orderBook.buyOrders.map((order) => {
               return (
-                <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
+                <tr key={order.id.toNumber() + order.timestamp.toNumber()} onClick={
+                  () => fillOrder(exchange, order)
+                }>
                   <th
                     scope="row"
                     className="border border-slate-700 py-1 font-normal"

@@ -15,6 +15,7 @@ const Home = () => {
     setIsLoading,
     checkIfWalletIsConnected,
     connectedAddress,
+    setExchange,
     loadAllOrders,
     exchangeAddr,
     tokenAddr,
@@ -27,17 +28,21 @@ const Home = () => {
     orderBook,
     myFilledOrders,
     myOpenOrders,
-    priceChart
+    priceChart,
+    exchange,
+    cancelOrder,
+    fillOrder
   } = useAppContext()
 
   useEffect(() => {
     checkIfWalletIsConnected()
     setIsLoading(true)
-    const exchange = getContract(exchangeAddr, ExchangeAbi.abi)
-    const token = getContract(tokenAddr, TokenAbi.abi)
+    const exchangeContract = getContract(exchangeAddr, ExchangeAbi.abi)
+    const tokenContract = getContract(tokenAddr, TokenAbi.abi)
 
-    setIsLoading(!exchange && !token)
-    loadAllOrders(exchange)
+    setIsLoading(!exchangeContract && !tokenContract)
+    loadAllOrders(exchangeContract)
+    setExchange(exchangeContract)
     
   }, [exchangeAddr, tokenAddr, ExchangeAbi, TokenAbi])
 
@@ -51,13 +56,16 @@ const Home = () => {
       <Header address={connectedAddress} />
       <div className="w-full flex-col md:grid md:grid-cols-4 md:grid-rows-2">
         <Balance />
-        <OrderBook orderBook={orderBook} />
+        <OrderBook orderBook={orderBook} fillOrder={fillOrder} exchange={exchange} />
         <PriceChart priceChart={priceChart}/>
         <Trades filledOrders={filledOrders} />
         <NewOrder />
         <Transactions
           myFilledOrders={myFilledOrders}
           myOpenOrders={myOpenOrders}
+          exchange={exchange}
+          cancelOrder={cancelOrder}
+          account={connectedAddress}
         />
       </div>
     </div>
