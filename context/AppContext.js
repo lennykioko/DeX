@@ -3,7 +3,15 @@ import { get, groupBy, reject, maxBy, minBy } from 'lodash'
 import moment from 'moment'
 import ExchangeAbi from '../lib/Exchange.json'
 import TokenAbi from '../lib/Token.json'
-import { ETHER_ADDRESS, ether, tokens, RED, GREEN } from './helper'
+import {
+  ETHER_ADDRESS,
+  ether,
+  tokens,
+  inputEther,
+  inputTokens,
+  RED,
+  GREEN,
+} from './helper'
 import {
   getFilledOrders,
   getAllOpenOrders,
@@ -32,6 +40,10 @@ export function AppContextProvider({ children }) {
   const [myFilledOrders, setMyFilledOrders] = useState([])
   const [myOpenOrders, setMyOpenOrders] = useState([])
   const [priceChart, setPriceChart] = useState({})
+  const [etherBalance, setEtherBalance] = useState(0)
+  const [tokenBalance, setTokenBalance] = useState(0)
+  const [exchangeEtherBalance, setExchangeEtherBalance] = useState(0)
+  const [exchangeTokenBalance, setExchangeTokenBalance] = useState(0)
 
   const exchangeAddr = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
   const tokenAddr = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
@@ -51,8 +63,8 @@ export function AppContextProvider({ children }) {
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       })
-      // setConnectedAddress(accounts)
-      setConnectedAddress('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
+      setConnectedAddress(accounts)
+      // setConnectedAddress('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
     } catch (e) {
       console.log(e)
       throw new Error('No ethereum account!')
@@ -64,8 +76,8 @@ export function AppContextProvider({ children }) {
       if (!window.ethereum) return alert('Please install Metamask!')
       const accounts = await window.ethereum.request({ method: 'eth_accounts' })
       if (accounts.length) {
-        // setConnectedAddress(accounts[0])
-        setConnectedAddress('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
+        setConnectedAddress(accounts[0])
+        // setConnectedAddress('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
       } else {
         connectWallet()
       }
@@ -145,15 +157,83 @@ export function AppContextProvider({ children }) {
 
   const subscribeToEvents = async (exchange) => {}
 
-  const loadBalances = async () => {}
+  const loadBalances = async (
+    // web3,
+    exchange
+    // token
+    // account
+  ) => {
+    if (typeof connectedAddress !== '') {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      // Ether balance in wallet
+      const etherBalance = await provider.getBalance(connectedAddress)
+      setEtherBalance(ether(etherBalance))
 
-  const depositEther = async () => {}
+      // Token balance in wallet
+      const tokenBalance = await token.balanceOf(connectedAddress)
+      setTokenBalance(tokens(tokenBalance))
 
-  const withdrawEther = async () => {}
+      // Ether balance in exchange
+      const exchangeEtherBalance = await exchange.balanceOf(
+        ETHER_ADDRESS,
+        connectedAddress
+      )
+      setExchangeEtherBalance(ether(exchangeEtherBalance))
 
-  const depositToken = async () => {}
+      // Token balance in exchange
+      const exchangeTokenBalance = await exchange.balanceOf(
+        tokenAddr,
+        connectedAddress
+      )
+      setExchangeTokenBalance(tokens(exchangeTokenBalance))
+    } else {
+      window.alert('Please login with MetaMask')
+    }
+  }
 
-  const withdrawToken = async () => {}
+  const depositEther = async (exchange, amount) => {
+    try {
+      await exchange.depositEther({
+        value: inputEther(amount),
+      })
+      // await loadBalances(exchange)
+    } catch (error) {
+      console.error(error)
+      window.alert(`There was an error!`)
+    }
+  }
+
+  const withdrawEther = async (exchange, amount) => {
+    try {
+      await exchange.withdrawEther(inputEther(amount))
+      // await loadBalances(exchange)
+    } catch (error) {
+      console.error(error)
+      window.alert(`There was an error!`)
+    }
+  }
+
+  const depositToken = async (exchange, num) => {
+    try {
+      const amount = inputEther(num)
+      await token.approve(exchange.address, amount)
+      await exchange.depositToken(tokenAddr, amount)
+      // await loadBalances(exchange)
+    } catch (error) {
+      console.error(error)
+      window.alert(`There was an error!`)
+    }
+  }
+
+  const withdrawToken = async (exchange, amount) => {
+    try {
+      exchange.withdrawToken(tokenAddr, inputEther(amount))
+      // await loadBalances(exchange)
+    } catch (error) {
+      console.error(error)
+      window.alert(`There was an error!`)
+    }
+  }
 
   const makeBuyOrder = async () => {}
 
@@ -178,9 +258,19 @@ export function AppContextProvider({ children }) {
     myOpenOrders,
     priceChart,
     setExchange,
+    setToken,
     exchange,
     cancelOrder,
     fillOrder,
+    loadBalances,
+    etherBalance,
+    tokenBalance,
+    exchangeEtherBalance,
+    exchangeTokenBalance,
+    depositEther,
+    withdrawEther,
+    depositToken,
+    withdrawToken,
   }
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>

@@ -10,3 +10,9 @@ export const ether = (num) => {
 }
 
 export const tokens = (num) => ether(num)
+
+export const inputEther = (num) => {
+  return ethers.utils.parseEther(num.toString())
+}
+
+export const inputTokens = (num) => inputEther(num)
