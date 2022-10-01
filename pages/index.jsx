@@ -14,6 +14,7 @@ const Home = () => {
     isLoading,
     setIsLoading,
     checkIfWalletIsConnected,
+    setConnectedAddress,
     connectedAddress,
     setExchange,
     setToken,
@@ -45,17 +46,23 @@ const Home = () => {
   } = useAppContext()
 
   useEffect(() => {
-    checkIfWalletIsConnected()
-    setIsLoading(true)
-    const exchangeContract = getContract(exchangeAddr, ExchangeAbi.abi)
-    const tokenContract = getContract(tokenAddr, TokenAbi.abi)
+    const initialLoad = async () => {
+      const currentConnectedAddress = await checkIfWalletIsConnected()
+      setConnectedAddress(currentConnectedAddress)
+      setIsLoading(true)
+      const exchangeContract = await getContract(exchangeAddr, ExchangeAbi.abi)
+      const tokenContract = await getContract(tokenAddr, TokenAbi.abi)
+  
+      setIsLoading(!exchangeContract && !tokenContract)
+      await loadAllOrders(exchangeContract, currentConnectedAddress)
+      setExchange(exchangeContract)
+      setToken(tokenContract)
+  
+      await loadBalances(exchangeContract, tokenContract, currentConnectedAddress)
+      setIsLoading(true)
+    }
 
-    setIsLoading(!exchangeContract && !tokenContract)
-    loadAllOrders(exchangeContract)
-    setExchange(exchangeContract)
-    setToken(tokenContract)
-
-    loadBalances(exchangeContract)
+    initialLoad()
   }, [exchangeAddr, tokenAddr, ExchangeAbi, TokenAbi])
 
   return (
@@ -66,7 +73,8 @@ const Home = () => {
       </Head>
 
       <Header address={connectedAddress} />
-      <div className="w-full flex-col md:grid md:grid-cols-4 md:grid-rows-2">
+      {isLoading ? (
+        <div className="w-full flex-col md:grid md:grid-cols-4 md:grid-rows-2">
         <Balance
           etherBalance={etherBalance}
           tokenBalance={tokenBalance}
@@ -94,6 +102,10 @@ const Home = () => {
           account={connectedAddress}
         />
       </div>
+      ): (
+        <div>No data</div>
+      )}
+      
     </div>
   )
 }

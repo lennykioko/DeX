@@ -18,7 +18,7 @@ function OrderBook({ orderBook, fillOrder, exchange }) {
             </tr>
           </thead>
           <tbody>
-            {/* {orderBook.sellOrders.map((order) => {
+            {orderBook.sellOrders.map((order) => {
               return (
                 <tr key={order.id.toNumber() + order.timestamp.toNumber()} onClick={
                   () => fillOrder(exchange, order)
@@ -37,7 +37,7 @@ function OrderBook({ orderBook, fillOrder, exchange }) {
                   </td>
                 </tr>
               )
-            })} */}
+            })}
           </tbody>
         </table>
 
@@ -56,7 +56,7 @@ function OrderBook({ orderBook, fillOrder, exchange }) {
             </tr>
           </thead>
           <tbody>
-            {/* {orderBook.buyOrders.map((order) => {
+            {orderBook.buyOrders.map((order) => {
               return (
                 <tr key={order.id.toNumber() + order.timestamp.toNumber()} onClick={
                   () => fillOrder(exchange, order)
@@ -75,7 +75,7 @@ function OrderBook({ orderBook, fillOrder, exchange }) {
                   </td>
                 </tr>
               )
-            })} */}
+            })}
           </tbody>
         </table>
       </div>

@@ -25,7 +25,7 @@ function Transactions({ myFilledOrders, myOpenOrders, cancelOrder, exchange, acc
             </tr>
           </thead>
           <tbody>
-            {/* {myFilledOrders.map((order) => {
+            {myFilledOrders.map((order) => {
               return (
                 <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
                   <th
@@ -43,7 +43,7 @@ function Transactions({ myFilledOrders, myOpenOrders, cancelOrder, exchange, acc
                   </td>
                 </tr>
               )
-            })} */}
+            })}
           </tbody>
         </table>
       </div>
@@ -64,7 +64,7 @@ function Transactions({ myFilledOrders, myOpenOrders, cancelOrder, exchange, acc
             </tr>
           </thead>
           <tbody>
-            {/* {myOpenOrders.map((order) => {
+            {myOpenOrders.map((order) => {
               return (
                 <tr key={order.id.toNumber() + order.timestamp.toNumber()}>
                   <th
@@ -81,7 +81,7 @@ function Transactions({ myFilledOrders, myOpenOrders, cancelOrder, exchange, acc
                   }>X</td>
                 </tr>
               )
-            })} */}
+            })}
           </tbody>
         </table>
       </div>

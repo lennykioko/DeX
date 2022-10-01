@@ -63,7 +63,8 @@ export function AppContextProvider({ children }) {
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       })
-      setConnectedAddress(accounts)
+      // setConnectedAddress(accounts)
+      return accounts
       // setConnectedAddress('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
     } catch (e) {
       console.log(e)
@@ -76,7 +77,8 @@ export function AppContextProvider({ children }) {
       if (!window.ethereum) return alert('Please install Metamask!')
       const accounts = await window.ethereum.request({ method: 'eth_accounts' })
       if (accounts.length) {
-        setConnectedAddress(accounts[0])
+        // setConnectedAddress(accounts[0])
+        return accounts[0]
         // setConnectedAddress('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266')
       } else {
         connectWallet()
@@ -88,7 +90,7 @@ export function AppContextProvider({ children }) {
   }
 
   // exchange functions
-  const loadAllOrders = async (exchange) => {
+  const loadAllOrders = async (exchange, account) => {
     // Fetch cancelled orders with the "Cancel" event stream
     const cancelStream = await exchange.queryFilter(exchange.filters.Cancel())
     // Format cancelled orders
@@ -123,14 +125,11 @@ export function AppContextProvider({ children }) {
 
     setOrderBook(allOpenOrders)
 
-    const myFilledOrdersList = getMyFilledOrders(
-      connectedAddress,
-      filledOrdersList
-    )
+    const myFilledOrdersList = getMyFilledOrders(account, filledOrdersList)
 
     setMyFilledOrders(myFilledOrdersList)
 
-    const myOpenOrdersList = getMyOpenOrders(connectedAddress, filledOrdersList)
+    const myOpenOrdersList = getMyOpenOrders(account, filledOrdersList)
 
     setMyOpenOrders(myOpenOrdersList)
 
@@ -159,32 +158,30 @@ export function AppContextProvider({ children }) {
 
   const loadBalances = async (
     // web3,
-    exchange
-    // token
-    // account
+    exchange,
+    token,
+    account
   ) => {
-    if (typeof connectedAddress !== '') {
+    if (typeof account !== '') {
+      // console.log('account', account)
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       // Ether balance in wallet
-      const etherBalance = await provider.getBalance(connectedAddress)
+      const etherBalance = await provider.getBalance(account)
       setEtherBalance(ether(etherBalance))
 
       // Token balance in wallet
-      const tokenBalance = await token.balanceOf(connectedAddress)
+      const tokenBalance = await token.balanceOf(account)
       setTokenBalance(tokens(tokenBalance))
 
       // Ether balance in exchange
       const exchangeEtherBalance = await exchange.balanceOf(
         ETHER_ADDRESS,
-        connectedAddress
+        account
       )
       setExchangeEtherBalance(ether(exchangeEtherBalance))
 
       // Token balance in exchange
-      const exchangeTokenBalance = await exchange.balanceOf(
-        tokenAddr,
-        connectedAddress
-      )
+      const exchangeTokenBalance = await exchange.balanceOf(tokenAddr, account)
       setExchangeTokenBalance(tokens(exchangeTokenBalance))
     } else {
       window.alert('Please login with MetaMask')
@@ -243,6 +240,7 @@ export function AppContextProvider({ children }) {
     isLoading,
     setIsLoading,
     checkIfWalletIsConnected,
+    setConnectedAddress,
     connectedAddress,
     loadAllOrders,
     exchangeAddr,
