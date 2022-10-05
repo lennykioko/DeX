@@ -232,9 +232,35 @@ export function AppContextProvider({ children }) {
     }
   }
 
-  const makeBuyOrder = async () => {}
+  const makeBuyOrder = async (exchange, order) => {
+    const tokenGet = token.address
+    const amountGet = inputEther(order.amount)
+    const tokenGive = ETHER_ADDRESS
+    const amountGive = inputEther(order.amount * order.price)
 
-  const makeSellOrder = async () => {}
+    try {
+      await exchange.makeOrder(tokenGet, amountGet, tokenGive, amountGive)
+      // await loadBalances(exchange)
+    } catch (error) {
+      console.error(error)
+      window.alert(`There was an error!`)
+    }
+  }
+
+  const makeSellOrder = async (exchange, order) => {
+    const tokenGet = ETHER_ADDRESS
+    const amountGet = inputEther(order.amount * order.price)
+    const tokenGive = token.address
+    const amountGive = inputEther(order.amount)
+
+    try {
+      await exchange.makeOrder(tokenGet, amountGet, tokenGive, amountGive)
+      // await loadBalances(exchange)
+    } catch (error) {
+      console.error(error)
+      window.alert(`There was an error!`)
+    }
+  }
 
   const context = {
     isLoading,
@@ -269,6 +295,8 @@ export function AppContextProvider({ children }) {
     withdrawEther,
     depositToken,
     withdrawToken,
+    makeBuyOrder,
+    makeSellOrder,
   }
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>

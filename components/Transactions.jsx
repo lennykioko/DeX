@@ -10,14 +10,14 @@ function Transactions({
       <div className="border-b-2 border-gray-900 p-4 text-xl">Transactions</div>
 
       <ul
-        class="nav nav-tabs mb-4 flex list-none flex-col flex-wrap border-b-0 pl-0 md:flex-row"
+        className="nav nav-tabs mb-4 flex list-none flex-col flex-wrap border-b-0 pl-0 md:flex-row"
         id="tabs-tab"
         role="tablist"
       >
-        <li class="nav-item" role="presentation">
+        <li className="nav-item" role="presentation">
           <a
             href="#tabs-trades"
-            class="
+            className="
             nav-link
             active
             my-2
@@ -40,10 +40,10 @@ function Transactions({
             Trades
           </a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li className="nav-item" role="presentation">
           <a
             href="#tabs-orders"
-            class="
+            className="
             nav-link
             my-2
             block
@@ -67,9 +67,9 @@ function Transactions({
           </a>
         </li>
       </ul>
-      <div class="tab-content" id="tabs-tabContent">
+      <div className="tab-content" id="tabs-tabContent">
         <div
-          class="active show tab-pane fade"
+          className="active show tab-pane fade"
           id="tabs-trades"
           role="tabpanel"
           aria-labelledby="tabs-trades-tab"
@@ -114,7 +114,7 @@ function Transactions({
           </div>
         </div>
         <div
-          class="fade tab-pane"
+          className="fade tab-pane"
           id="tabs-orders"
           role="tabpanel"
           aria-labelledby="tabs-orders-tab"

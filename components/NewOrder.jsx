@@ -1,28 +1,30 @@
-function NewOrder() {
-  // Validate the inputs in the input fields using this function
-  // having input type number looks ugly
-  const isNumber = (n) => {
-    try {
-      const num = parseFloat(n)
-      return !isNaN(num)
-    } catch (error) {
-      console.log(`invalid input for n: ${n}`)
-    }
-  }
+import React, { useState } from 'react'
+
+function NewOrder({
+  makeBuyOrder, makeSellOrder, exchange
+}) {
+  const [buyOrder, setBuyOrder] = useState({
+    amount: 0,
+    price: 0
+  })
+  const [sellOrder, setSellOrder] = useState({
+    amount: 0,
+    price: 0
+  })
 
   // need to set state for buy or sell and toggle the names and color of buttons on toggle
   return (
     <div className="border-2 border-black">
       <div className="border-b-2 border-gray-900 p-4 text-xl">NewOrder</div>
       <ul
-        class="nav nav-tabs mb-4 flex list-none flex-col flex-wrap border-b-0 pl-0 md:flex-row"
+        className="nav nav-tabs mb-4 flex list-none flex-col flex-wrap border-b-0 pl-0 md:flex-row"
         id="tabs-tab"
         role="tablist"
       >
-        <li class="nav-item" role="presentation">
+        <li className="nav-item" role="presentation">
           <a
             href="#tabs-buy"
-            class="
+            className="
             nav-link
             active
             my-2
@@ -45,10 +47,10 @@ function NewOrder() {
             Buy
           </a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li className="nav-item" role="presentation">
           <a
             href="#tabs-sell"
-            class="
+            className="
             nav-link
             my-2
             block
@@ -72,9 +74,9 @@ function NewOrder() {
           </a>
         </li>
       </ul>
-      <div class="tab-content" id="tabs-tabContent">
+      <div className="tab-content" id="tabs-tabContent">
         <div
-          class="active show tab-pane fade"
+          className="active show tab-pane fade"
           id="tabs-buy"
           role="tabpanel"
           aria-labelledby="tabs-buy-tab"
@@ -83,31 +85,60 @@ function NewOrder() {
             <label htmlFor="buyAmount">Buy Amount (DAPP)</label>
             <input
               className="my-2 block rounded-lg bg-gray-700 p-2 focus:outline-none"
-              type="text"
+              type="number"
               name="buyAmount"
               id="buyAmount"
               placeholder="Buy Amount"
+              onChange={(event) => setBuyOrder({...buyOrder, amount: Number(event.target.value) })}
             />
 
             <label htmlFor="buyPrice">Buy Price</label>
             <input
               className="my-2 block rounded-lg bg-gray-700 p-2 focus:outline-none"
-              type="text"
+              type="number"
               name="buyPrice"
               id="buyPrice"
               placeholder="Buy Price"
+              onChange={(event) => setBuyOrder({...buyOrder, price: Number(event.target.value) })}
             />
-            <button className="ml-2 rounded-lg bg-green-800 p-2">
+            <button className="ml-2 rounded-lg bg-green-800 p-2" onClick={() => makeBuyOrder(exchange, buyOrder)}>
               Buy Order
             </button>
+            <p>Total: {buyOrder.amount * buyOrder.price} ETH</p>
           </div>
         </div>
         <div
-          class="fade tab-pane"
+          className="fade tab-pane"
           id="tabs-sell"
           role="tabpanel"
           aria-labelledby="tabs-sell-tab"
-        ></div>
+        >
+          <div className="flex-col p-4">
+            <label htmlFor="sellAmount">Sell Amount (DAPP)</label>
+            <input
+              className="my-2 block rounded-lg bg-gray-700 p-2 focus:outline-none"
+              type="number"
+              name="sellAmount"
+              id="sellAmount"
+              placeholder="Sell Amount"
+              onChange={(event) => setSellOrder({...sellOrder, amount: Number(event.target.value) })}
+            />
+
+            <label htmlFor="sellPrice">Sell Price</label>
+            <input
+              className="my-2 block rounded-lg bg-gray-700 p-2 focus:outline-none"
+              type="number"
+              name="sellPrice"
+              id="sellPrice"
+              placeholder="Sell Price"
+              onChange={(event) => setSellOrder({...sellOrder, price: Number(event.target.value) })}
+            />
+            <button className="ml-2 rounded-lg bg-green-800 p-2" onClick={() => makeSellOrder(exchange, sellOrder)}>
+              Sell Order
+            </button>
+            <p>Total: {sellOrder.amount * sellOrder.price} ETH</p>
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -19,14 +19,14 @@ function Balance({
   return (
     <div className="border-2 border-black">
       <ul
-        class="nav nav-tabs mb-4 flex list-none flex-col flex-wrap border-b-0 pl-0 md:flex-row"
+        className="nav nav-tabs mb-4 flex list-none flex-col flex-wrap border-b-0 pl-0 md:flex-row"
         id="tabs-tab"
         role="tablist"
       >
-        <li class="nav-item" role="presentation">
+        <li className="nav-item" role="presentation">
           <a
             href="#tabs-home"
-            class="
+            className="
             nav-link
             active
             my-2
@@ -49,10 +49,10 @@ function Balance({
             Deposit
           </a>
         </li>
-        <li class="nav-item" role="presentation">
+        <li className="nav-item" role="presentation">
           <a
             href="#tabs-profile"
-            class="
+            className="
             nav-link
             my-2
             block
@@ -76,9 +76,9 @@ function Balance({
           </a>
         </li>
       </ul>
-      <div class="tab-content" id="tabs-tabContent">
+      <div className="tab-content" id="tabs-tabContent">
         <div
-          class="active tab-pane show fade"
+          className="active tab-pane show fade"
           id="tabs-home"
           role="tabpanel"
           aria-labelledby="tabs-home-tab"
@@ -172,7 +172,7 @@ function Balance({
           </div>
         </div>
         <div
-          class="fade tab-pane"
+          className="fade tab-pane"
           id="tabs-profile"
           role="tabpanel"
           aria-labelledby="tabs-profile-tab"
